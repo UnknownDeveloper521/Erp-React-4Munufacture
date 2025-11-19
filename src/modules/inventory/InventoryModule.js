@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import InventoryDashboard from './inventory/InventoryDashboard';
-import InventoryList from './inventory/components/InventoryList';
-import InventoryItemDetail from './inventory/InventoryItemDetail';
-import InventoryTransfers from './inventory/InventoryTransfers';
-import InventoryAdjustments from './inventory/InventoryAdjustments';
-import InventoryReports from './inventory/InventoryReports';
+import InventoryDashboard from './InventoryDashboard';
+import InventoryList from './components/InventoryList';
+import InventoryItemDetail from './InventoryItemDetail';
+import InventoryTransfers from './InventoryTransfers';
+import InventoryAdjustments from './InventoryAdjustments';
+import InventoryReports from './InventoryReports';
 
 const InventoryModule = ({ activeView = 'dashboard' }) => {
   const [selectedItem, setSelectedItem] = useState(null);

@@ -12,8 +12,8 @@ import {
   AlertCircle,
   CheckCircle
 } from 'lucide-react';
-import { userService } from '../services/userService';
-import { useAuth } from '../contexts/AuthContext';
+import { userService } from './services/userService';
+import { useAuth } from '../../contexts/AuthContext';
 
 const UsersModule = () => {
   const [users, setUsers] = useState([]);

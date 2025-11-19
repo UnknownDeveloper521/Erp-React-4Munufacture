@@ -10,7 +10,7 @@ import {
   AlertCircle,
   TrendingUp
 } from 'lucide-react';
-import { employeeService } from '../services/employeeService';
+import { employeeService } from './services/employeeService';
 
 // Simple reusable pie chart component (SVG based)
 const PieChartComponent = ({ data, colors, size = 220 }) => {

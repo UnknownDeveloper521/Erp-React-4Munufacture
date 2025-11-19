@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import ProfileMenu from './ProfileMenu';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { ProfileMenu } from '../common';
 import { 
   ChevronDown, 
   Users, 

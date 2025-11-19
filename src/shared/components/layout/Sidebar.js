@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { userService } from '../services/userService';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../../contexts/AuthContext';
+import { userService } from '../../../modules/users/services';
 import { 
   Home,
   Users, 
@@ -15,9 +16,19 @@ import {
   Shield
 } from 'lucide-react';
 
-const Sidebar = ({ activeModule, onModuleChange }) => {
+const Sidebar = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // Determine active module from current path
+  const getActiveModuleFromPath = (pathname) => {
+    const pathParts = pathname.split('/').filter(Boolean);
+    return pathParts.length > 0 ? pathParts[0] : 'dashboard';
+  };
+
+  const activeModule = getActiveModuleFromPath(location.pathname);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -114,7 +125,7 @@ const Sidebar = ({ activeModule, onModuleChange }) => {
     if (module.comingSoon && module.id !== 'dashboard') {
       alert(`${module.name} module is coming soon!`);
     } else {
-      onModuleChange(module.id);
+      navigate(`/${module.id}`);
     }
   };
 
@@ -122,9 +133,15 @@ const Sidebar = ({ activeModule, onModuleChange }) => {
     <div className="w-64 bg-white shadow-lg h-screen flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">Tassos ERP</h1>
-          <p className="text-sm text-gray-600 mt-1">Welcome, {user?.name}</p>
+        <div className="flex items-center space-x-3">
+          <img 
+            src="/assets/images/logos/logo.png" 
+            alt="Tassos ERP Logo" 
+            className="h-10 w-auto"
+          />
+          <div>
+            <p className="text-sm text-gray-600 mt-1">Welcome, {user?.name}</p>
+          </div>
         </div>
       </div>
 

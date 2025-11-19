@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Phone, MapPin, Briefcase, DollarSign, Calendar, FileText } from 'lucide-react';
-import { masterDataService } from '../services/masterDataService';
+import { masterDataService } from '../../../shared/services/masterDataService';
 
 const AddEmployeeModalEnhanced = ({ isOpen, onClose, onSubmit }) => {
   const [activeTab, setActiveTab] = useState('personal');

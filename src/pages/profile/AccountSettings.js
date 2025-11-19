@@ -12,8 +12,8 @@ import {
   Moon,
   Sun
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { userService } from '../services/userService';
+import { useAuth } from '../../contexts/AuthContext';
+import { userService } from '../../modules/users/services/userService';
 
 const AccountSettings = () => {
   const { user } = useAuth();

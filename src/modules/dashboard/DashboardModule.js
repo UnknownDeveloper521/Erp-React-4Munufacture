@@ -10,7 +10,7 @@ import {
   CheckCircle,
   PieChart
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 // Pie Chart Component
 const PieChartComponent = ({ data, colors, size = 200 }) => {

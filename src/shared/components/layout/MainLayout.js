@@ -1,21 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../contexts/AuthContext';
 import Sidebar from './Sidebar';
 import DynamicNavbar from './DynamicNavbar';
-import AddEmployeeModalEnhanced from './AddEmployeeModalEnhanced';
-import DashboardModule from '../modules/DashboardModule';
-import HRModuleEnhanced from '../modules/HRModuleEnhanced';
-import UsersModule from '../modules/UsersModule';
-import InventoryModule from '../modules/InventoryModule';
-import { employeeService } from '../services/employeeService';
+import { AddEmployeeModalEnhanced } from '../../../modules/hr/components';
+import { DashboardModule } from '../../../modules/dashboard';
+import { HRModule } from '../../../modules/hr';
+import { UsersModule } from '../../../modules/users';
+import { InventoryModule } from '../../../modules/inventory';
+import { employeeService } from '../../../modules/hr/services';
 
 const MainLayout = () => {
   const { logout } = useAuth();
-  const [activeModule, setActiveModule] = useState('dashboard');
-  const [activeView, setActiveView] = useState('dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
   const [isAddEmployeeModalOpen, setIsAddEmployeeModalOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Determine active module and view from URL
+  const getModuleAndViewFromPath = (pathname) => {
+    const pathParts = pathname.split('/').filter(Boolean);
+    
+    if (pathParts.length === 0 || pathParts[0] === 'dashboard') {
+      return { module: 'dashboard', view: 'dashboard' };
+    }
+    
+    const module = pathParts[0];
+    const view = pathParts[1] || module;
+    
+    // Map specific paths to views
+    const viewMapping = {
+      'all-employees': 'employees',
+      'attendance': 'attendance-overview',
+      'leave-requests': 'leave-requests',
+      'payroll': 'salary-management',
+      'performance': 'performance-reviews',
+      'stock': 'stock',
+      'transfers': 'transfers',
+      'adjustments': 'adjustments',
+      'reports': 'reports'
+    };
+    
+    return { 
+      module, 
+      view: viewMapping[view] || view 
+    };
+  };
+
+  const { module: activeModule, view: activeView } = getModuleAndViewFromPath(location.pathname);
 
   // Check if screen is mobile size
   useEffect(() => {
@@ -38,26 +71,26 @@ const MainLayout = () => {
         break;
       case 'view-employees':
       case 'employee-directory':
-        setActiveView('employees');
+        navigate('/hr/all-employees');
         break;
       case 'attendance-overview':
       case 'time-tracking':
-        setActiveView('attendance-overview');
+        navigate('/hr/attendance');
         break;
       case 'leave-requests':
-        setActiveView('leave-requests');
+        navigate('/hr/leave-requests');
         break;
       case 'salary-management':
       case 'payroll-processing':
       case 'tax-management':
       case 'payroll-reports':
-        setActiveView(action);
+        navigate('/hr/payroll');
         break;
       case 'performance-reviews':
       case 'goal-management':
       case 'training-programs':
       case 'performance-analytics':
-        setActiveView(action);
+        navigate('/hr/performance');
         break;
       case 'search':
         console.log('Searching for:', data);
@@ -75,47 +108,41 @@ const MainLayout = () => {
         }
         break;
       case 'admin-users':
-        if (activeModule !== 'users') {
-          setActiveModule('users');
-          setActiveView('users');
-        }
+        navigate('/users');
         break;
       case 'admin-invite':
-        if (activeModule !== 'users') {
-          setActiveModule('users');
-          setActiveView('users');
-        }
+        navigate('/users');
         if (window.openInviteUserModal) {
           window.openInviteUserModal();
         }
         break;
       // Inventory actions
       case 'inventory-dashboard':
-        setActiveView('dashboard');
+        navigate('/inventory');
         break;
       case 'inventory-stock':
-        setActiveView('stock');
+        navigate('/inventory/stock');
         break;
       case 'inventory-transfers':
       case 'inventory-create-transfer':
       case 'inventory-pending-transfers':
-        setActiveView('transfers');
+        navigate('/inventory/transfers');
         break;
       case 'inventory-adjustments':
       case 'inventory-create-adjustment':
       case 'inventory-adjustment-history':
-        setActiveView('adjustments');
+        navigate('/inventory/adjustments');
         break;
       case 'inventory-reordering':
       case 'inventory-low-stock':
       case 'inventory-purchase-orders':
-        setActiveView('reordering');
+        navigate('/inventory/reordering');
         break;
       case 'inventory-reports':
       case 'inventory-stock-levels':
       case 'inventory-movements':
       case 'inventory-valuation':
-        setActiveView('reports');
+        navigate('/inventory/reports');
         break;
       case 'inventory-search':
         console.log('Searching inventory:', data);
@@ -155,7 +182,7 @@ const MainLayout = () => {
         confirmation_date: employeeData.confirmation_date || null
       };
 
-      const { data, error, userError, password } = await employeeService.createWithUser(dbEmployeeData);
+      const { error, userError, password } = await employeeService.createWithUser(dbEmployeeData);
       
       if (error) {
         alert(`Error adding employee: ${error.message}`);
@@ -190,11 +217,28 @@ const MainLayout = () => {
       case 'dashboard':
         return <DashboardModule />;
       case 'hr':
-        return <HRModuleEnhanced activeView={activeView} />;
+        return <HRModule activeView={activeView} />;
       case 'users':
         return <UsersModule />;
       case 'inventory':
         return <InventoryModule activeView={activeView} />;
+      case 'finance':
+      case 'crm':
+      case 'sales':
+      case 'supply':
+      case 'reports':
+      case 'documents':
+      case 'projects':
+        return (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                {activeModule.charAt(0).toUpperCase() + activeModule.slice(1)} Module
+              </h2>
+              <p className="text-gray-600">This module is coming soon!</p>
+            </div>
+          </div>
+        );
       default:
         return <DashboardModule />;
     }
@@ -204,13 +248,7 @@ const MainLayout = () => {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div className={`${isMobile ? 'hidden' : 'block'}`}>
-        <Sidebar 
-          activeModule={activeModule} 
-          onModuleChange={(module) => {
-            setActiveModule(module);
-            setActiveView(module); // Reset view when switching modules
-          }}
-        />
+        <Sidebar />
       </div>
       
       {/* Main Content */}
@@ -218,8 +256,12 @@ const MainLayout = () => {
         {/* Mobile Header - Show sidebar content on mobile */}
         {isMobile && (
           <div className="bg-white shadow-sm border-b px-4 py-3 lg:hidden flex items-center justify-between">
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">Tassos ERP</h1>
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/assets/images/logos/logo.png" 
+                alt="Tassos ERP Logo" 
+                className="h-8 w-auto"
+              />
               <p className="text-sm text-gray-600">Tap menu to navigate modules</p>
             </div>
             <button
@@ -258,14 +300,7 @@ const MainLayout = () => {
             onClick={() => setIsMobileSidebarOpen(false)}
           />
           <div className="relative z-50">
-            <Sidebar
-              activeModule={activeModule}
-              onModuleChange={(module) => {
-                setActiveModule(module);
-                setActiveView(module);
-                setIsMobileSidebarOpen(false);
-              }}
-            />
+            <Sidebar />
           </div>
         </div>
       )}

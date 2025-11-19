@@ -1,4 +1,4 @@
-import { auth, supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 
 export const authService = {
   // Register new user
@@ -99,7 +99,7 @@ export const authService = {
 
   // Listen to auth state changes
   onAuthStateChange: (callback) => {
-    return auth.onAuthStateChange((event, session) => {
+    return supabase.auth.onAuthStateChange((event, session) => {
       callback(event, session);
     });
   },
