@@ -119,6 +119,14 @@ function App() {
               } 
             />
             <Route 
+              path="/inventory/reordering" 
+              element={
+                <PrivateRoute>
+                  <MainLayout />
+                </PrivateRoute>
+              } 
+            />
+            <Route 
               path="/inventory/reports" 
               element={
                 <PrivateRoute>

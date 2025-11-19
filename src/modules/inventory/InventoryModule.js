@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import InventoryDashboard from './InventoryDashboard';
 import InventoryList from './components/InventoryList';
 import InventoryItemDetail from './InventoryItemDetail';
-import InventoryTransfers from './InventoryTransfers';
-import InventoryAdjustments from './InventoryAdjustments';
-import InventoryReports from './InventoryReports';
+import InventoryStock from './components/InventoryStock';
+import InventoryTransfers from './components/InventoryTransfers';
+import InventoryAdjustments from './components/InventoryAdjustments';
+import InventoryReordering from './components/InventoryReordering';
+import InventoryReports from './components/InventoryReports';
 
 const InventoryModule = ({ activeView = 'dashboard' }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -44,19 +46,48 @@ const InventoryModule = ({ activeView = 'dashboard' }) => {
       case 'dashboard':
         return <InventoryDashboard onNavigate={handleViewChange} />;
       case 'stock':
-        return (
-          <InventoryList
-            onItemSelect={handleItemSelect}
-            onNavigate={handleViewChange}
-          />
-        );
+        return <InventoryStock onNavigate={handleViewChange} />;
+      case 'inventory-dashboard':
+        return <InventoryDashboard onNavigate={handleViewChange} />;
+      case 'inventory-stock':
+        return <InventoryStock onNavigate={handleViewChange} />;
+      case 'inventory-add-item':
+        return <InventoryStock onNavigate={handleViewChange} />;
+      case 'inventory-export':
+        return <InventoryStock onNavigate={handleViewChange} />;
       case 'transfers':
+        return <InventoryTransfers />;
+      case 'inventory-transfers':
+        return <InventoryTransfers />;
+      case 'inventory-create-transfer':
+        return <InventoryTransfers />;
+      case 'inventory-pending-transfers':
         return <InventoryTransfers />;
       case 'adjustments':
         return <InventoryAdjustments />;
+      case 'inventory-adjustments':
+        return <InventoryAdjustments />;
+      case 'inventory-create-adjustment':
+        return <InventoryAdjustments />;
+      case 'inventory-adjustment-history':
+        return <InventoryAdjustments />;
       case 'reordering':
-        return <InventoryReports view="reordering" />;
+        return <InventoryReordering />;
+      case 'inventory-reordering':
+        return <InventoryReordering />;
+      case 'inventory-low-stock':
+        return <InventoryReordering />;
+      case 'inventory-purchase-orders':
+        return <InventoryReordering />;
       case 'reports':
+        return <InventoryReports />;
+      case 'inventory-reports':
+        return <InventoryReports />;
+      case 'inventory-stock-levels':
+        return <InventoryReports />;
+      case 'inventory-movements':
+        return <InventoryReports />;
+      case 'inventory-valuation':
         return <InventoryReports />;
       default:
         return <InventoryDashboard onNavigate={handleViewChange} />;

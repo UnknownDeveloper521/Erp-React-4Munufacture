@@ -12,8 +12,18 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
-// Pie Chart Component
+// Pie Chart Component with Animation
 const PieChartComponent = ({ data, colors, size = 200 }) => {
+  const [isAnimated, setIsAnimated] = useState(false);
+
+  // Trigger animation on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimated(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Ensure we always have data to display
   if (!data || data.length === 0) {
     return (
@@ -96,6 +106,7 @@ const PieChartComponent = ({ data, colors, size = 200 }) => {
           width="100%"
           height={size}
           viewBox={`0 0 ${size} ${size}`}
+          className="overflow-visible"
         >
           {segments.map((segment, index) => (
             <path
@@ -104,17 +115,21 @@ const PieChartComponent = ({ data, colors, size = 200 }) => {
               fill={segment.color}
               stroke="white"
               strokeWidth="2"
-              className="hover:opacity-80 transition-opacity cursor-pointer"
+              className="hover:opacity-80 transition-all duration-300 cursor-pointer hover:scale-105"
+              style={{
+                transformOrigin: `${centerX}px ${centerY}px`,
+                animation: isAnimated ? `pieSliceGrow 0.8s ease-out ${index * 0.1}s both` : 'none'
+              }}
             />
           ))}
         </svg>
       </div>
       <div className="w-full space-y-2">
         {segments.map((segment, index) => (
-          <div key={index} className="flex items-center justify-between text-sm">
+          <div key={index} className="chart-legend-item flex items-center justify-between text-sm">
             <div className="flex items-center">
               <div 
-                className="w-3 h-3 rounded-full mr-2" 
+                className="w-3 h-3 rounded-full mr-2 transition-transform hover:scale-110" 
                 style={{ backgroundColor: segment.color }}
               />
               <span className="text-gray-700">{segment.label}</span>
@@ -199,7 +214,7 @@ const DashboardModule = () => {
     return () => {
       delete window.refreshDashboardData;
     };
-  }, []);
+  }, [refreshData]);
 
   const chartColors = [
     '#3B82F6', // blue

@@ -15,3 +15,72 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Chart Animations */
+@keyframes pieSliceGrow {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes countUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Chart Legend Animation */
+.chart-legend-item {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.chart-legend-item:nth-child(1) { animation-delay: 0.1s; }
+.chart-legend-item:nth-child(2) { animation-delay: 0.2s; }
+.chart-legend-item:nth-child(3) { animation-delay: 0.3s; }
+.chart-legend-item:nth-child(4) { animation-delay: 0.4s; }
+.chart-legend-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Stats Card Animation */
+.stats-card {
+  animation: slideInRight 0.6s ease-out both;
+}
+
+.stats-card:nth-child(1) { animation-delay: 0.1s; }
+.stats-card:nth-child(2) { animation-delay: 0.2s; }
+.stats-card:nth-child(3) { animation-delay: 0.3s; }
+.stats-card:nth-child(4) { animation-delay: 0.4s; }

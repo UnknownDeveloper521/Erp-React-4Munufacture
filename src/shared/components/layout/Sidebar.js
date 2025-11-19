@@ -137,11 +137,11 @@ const Sidebar = () => {
           <img 
             src="/assets/images/logos/logo.png" 
             alt="Tassos ERP Logo" 
-            className="h-10 w-auto"
+            className="h-14 w-auto"
           />
-          <div>
+          {/* <div>
             <p className="text-sm text-gray-600 mt-1">Welcome, {user?.name}</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
